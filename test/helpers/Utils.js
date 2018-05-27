@@ -1,3 +1,12 @@
+function isException(error) {
+    let strError = error.toString();
+    return strError.includes('invalid opcode') || strError.includes('invalid JUMP') || strError.includes('revert');
+}
+
+function ensureException(error) {
+    assert(isException(error), error.toString());
+}
+
 function advanceBlock() {
     return new Promise((resolve, reject) => {
         web3.currentProvider.sendAsync({
@@ -19,6 +28,8 @@ async function advanceToBlock(number) {
         await advanceBlock()
     }
 }
+
 module.exports = {
     advanceToBlock: advanceToBlock,
+    ensureException: ensureException,
 };
